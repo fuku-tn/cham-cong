@@ -149,3 +149,8 @@ tr:last-child td { border-bottom: 0; } tbody tr:hover td { background: #faf9f6; 
   .page { padding: 8px 16px 40px; } .panel { grid-template-columns: 1fr 1fr; gap: 20px 0; } .metrics { grid-template-columns: 1fr; gap: 14px; } .metrics > div { border: 0; padding-left: 0; }
   .userbox .who-mini { display: none; }
 }
+
+/* v2.1: nút điều hướng ngày (thẻ tối) */
+.navbtn { border: 0; background: rgba(255,255,255,.14); color: #fff; width: 34px; height: 34px; border-radius: 50%; font-size: 18px; }
+.navbtn:hover:not(:disabled) { background: rgba(255,255,255,.25); } .navbtn:disabled { opacity: .35; cursor: not-allowed; }
+.checkin .btn.big { background: var(--green); }

@@ -15,6 +15,13 @@ function ymd(d) {
 const COLORS = ['#4a9d5f', '#4a77d4', '#d99a2b', '#c4506f', '#7d62c4', '#2f9d98', '#b8912a', '#c26248'];
 const SAMPLE = [{ name: 'Nhân viên mẫu 1', position: 'Nhân viên' }, { name: 'Nhân viên mẫu 2', position: 'Nhân viên' }];
 
+// Giờ làm việc & tên công ty: đọc từ config.json ở thư mục gốc (sửa file này rồi khởi động lại server)
+function loadConfig() {
+  const defaults = { company: 'Starttrain', workStart: '09:00', lateAfter: '09:15', workEnd: '18:00', standardHours: 8 };
+  try { return { ...defaults, ...JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'config.json'), 'utf8')) }; }
+  catch { return defaults; }
+}
+
 function seed() {
   const file = path.join(__dirname, '..', 'data', 'employees.json');
   const people = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : SAMPLE;
@@ -32,10 +39,10 @@ function seed() {
   }));
   const employees = [admin, ...staff];
   return {
-    settings: { company: 'Starttrain', workStart: '08:30', lateAfter: '08:45', workEnd: '17:30', standardHours: 8 },
+    settings: loadConfig(),
     nextIds: { employee: employees.length + 1, attendance: 1, leave: 1 },
     employees, attendance: [], leaves: [],
   };
 }
 
-module.exports = { seed, hash, ymd };
+module.exports = { seed, hash, ymd, loadConfig };

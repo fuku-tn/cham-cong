@@ -13,6 +13,6 @@
 3. **Nhân sự** – danh sách, thêm/sửa/đánh dấu nghỉ việc.
 
 ## Quy tắc nghiệp vụ
-- Ngày làm việc: T2–T6. Muộn nếu giờ vào sau 08:45 (cấu hình trong `settings`).
+- Ngày làm việc: T2–T6. Giờ làm 09:00–18:00; muộn nếu giờ vào sau 09:15 (cấu hình trong `config.json`).
 - Không chấm công cho ngày tương lai, cuối tuần, hoặc ngày nhân viên đang nghỉ phép.
 - Phép năm: 12 ngày/năm/người; bản ghi "Phép năm" không được vượt số còn lại. Nghỉ phép do người phụ trách ghi nhận nên có hiệu lực ngay.

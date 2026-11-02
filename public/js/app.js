@@ -91,10 +91,31 @@ async function render() {
   $app.innerHTML = `<header class="topbar">${BRAND}<nav class="nav">${nav}</nav>
     <div class="userbox"><div class="who-mini"><b>${esc(ME.name)}</b><small>${esc(ME.position)}</small></div>
     <button class="btn ghost sm" id="pw">Đổi mật khẩu</button><button class="btn ghost sm" id="logout">Đăng xuất</button></div></header>
-    <main class="page" id="page"><div class="empty">Đang tải…</div></main>`;
+    <div id="updbar"></div><main class="page" id="page"><div class="empty">Đang tải…</div></main>
+    <footer class="foot">${COMPANY} Chấm công · phiên bản ${esc(ME.version || '')}</footer>`;
   document.getElementById('pw').onclick = passwordModal;
+  checkUpdate();
   document.getElementById('logout').onclick = async () => { await api('POST', '/api/logout'); ME = null; render(); };
   try { await PAGES[key].view(document.getElementById('page')); } catch (e) { toast(e.message, true); }
+}
+
+// ---------- Cập nhật phiên bản ----------
+let updInfo = null;
+async function checkUpdate() {
+  try { if (!updInfo) updInfo = await api('GET', '/api/update/check'); } catch { return; }
+  const bar = document.getElementById('updbar');
+  if (!bar || !updInfo?.available) return;
+  bar.innerHTML = `<div class="updbar"><div><b>Có phiên bản mới</b> (${updInfo.behind} thay đổi)
+    <small>${updInfo.changes.map(esc).join(' · ')}</small></div><button class="btn green sm" id="doUpdate">Cập nhật ngay</button></div>`;
+  document.getElementById('doUpdate').onclick = () => {
+    if (!confirm('Cập nhật sẽ mở một cửa sổ terminal và khởi động lại ứng dụng (mất vài chục giây).\nDữ liệu chấm công được giữ nguyên và tự sao lưu trước.\n\nTiếp tục?')) return;
+    run(async () => {
+      await api('POST', '/api/update/run');
+      document.getElementById('page').innerHTML = `<div class="card" style="text-align:center;padding:48px"><h2 style="justify-content:center">Đang cập nhật…</h2>
+        <p style="color:var(--muted);margin-top:8px">Hãy theo dõi cửa sổ terminal vừa mở. Khi nó báo xong và trình duyệt tự mở lại, bạn có thể dùng tiếp.<br>Nếu trang này không tự tải lại, bấm <b>F5</b>.</p></div>`;
+      bar.innerHTML = '';
+    });
+  };
 }
 
 // ---------- Tổng quan ----------

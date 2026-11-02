@@ -4,7 +4,8 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
-const { seed, hash, ymd } = require('./seed');
+const { execFile, spawn } = require('child_process');
+const { seed, hash, ymd, loadConfig } = require('./seed');
 
 const PORT = process.env.PORT || 3000;
 const ROOT = path.join(__dirname, '..');
@@ -17,7 +18,22 @@ fs.mkdirSync(DATA_DIR, { recursive: true });
 let db;
 if (fs.existsSync(DB_FILE)) db = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
 else { db = seed(); save(); console.log('Đã tạo dữ liệu khởi tạo:', DB_FILE); }
-function save() { fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2)); }
+function save() {
+  // Ghi ra file tạm rồi đổi tên để không bị hỏng dữ liệu nếu máy tắt đột ngột
+  fs.writeFileSync(DB_FILE + '.tmp', JSON.stringify(db, null, 2));
+  fs.renameSync(DB_FILE + '.tmp', DB_FILE);
+}
+db.settings = loadConfig(); // giờ làm việc luôn theo config.json
+
+// Tự sao lưu mỗi ngày (lần khởi động đầu tiên trong ngày), giữ 30 bản gần nhất
+(function dailyBackup() {
+  const dir = path.join(ROOT, 'Archive', 'db-backup');
+  fs.mkdirSync(dir, { recursive: true });
+  const file = path.join(dir, `db-${ymd(new Date())}.json`);
+  if (!fs.existsSync(file)) fs.copyFileSync(DB_FILE, file);
+  const old = fs.readdirSync(dir).filter(f => /^db-\d{4}-\d{2}-\d{2}\.json$/.test(f)).sort().slice(0, -30);
+  old.forEach(f => fs.unlinkSync(path.join(dir, f)));
+})();
 
 const sessions = new Map(); // token -> userId
 
@@ -71,7 +87,36 @@ route('POST', '/api/logout', ({ req, res }) => {
   return { ok: true };
 });
 
-route('GET', '/api/me', ({ user }) => ({ ...pub(user), settings: db.settings }));
+const VERSION = (() => { try { return JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8')).version; } catch { return '?'; } })();
+route('GET', '/api/me', ({ user }) => ({ ...pub(user), settings: db.settings, version: VERSION }));
+
+// ---- Cập nhật phiên bản (qua git) ----
+const git = args => new Promise(resolve => execFile('git', args, { cwd: ROOT, timeout: 20000, windowsHide: true, env: { ...process.env, GIT_TERMINAL_PROMPT: '0' } },
+  (err, out) => resolve({ err, out: String(out || '').trim() })));
+let updateCache = { at: 0, data: null };
+route('GET', '/api/update/check', async ({ query }) => {
+  if (updateCache.data && Date.now() - updateCache.at < 10 * 60 * 1000 && query.get('force') !== '1') return updateCache.data;
+  let data = { supported: false, version: VERSION };
+  const inRepo = await git(['rev-parse', '--is-inside-work-tree']);
+  const upstream = inRepo.err ? null : await git(['rev-parse', '--abbrev-ref', '@{u}']);
+  if (upstream && !upstream.err) {
+    const fetched = await git(['fetch', '--quiet']);
+    const behind = Number((await git(['rev-list', '--count', 'HEAD..@{u}'])).out) || 0;
+    const log = behind ? (await git(['log', '--format=%s', '-n', '5', 'HEAD..@{u}'])).out.split(/\r?\n/).map(x => x.trim()).filter(Boolean) : [];
+    data = { supported: true, version: VERSION, behind, available: behind > 0, changes: log, offline: !!fetched.err };
+  }
+  updateCache = { at: Date.now(), data };
+  return data;
+});
+route('POST', '/api/update/run', () => {
+  need(process.platform === 'win32', 'Cập nhật tự động hiện chỉ hỗ trợ Windows. Hãy chạy "git pull" thủ công.');
+  need(fs.existsSync(path.join(ROOT, 'update.bat')), 'Thiếu file update.bat');
+  // Mở cửa sổ terminal mới chạy update.bat (nó sẽ tự chờ server này tắt rồi pull và khởi động lại)
+  spawn('cmd.exe', ['/c', `start "Cap nhat Starttrain" /D "${ROOT}" cmd /k "${path.join(ROOT, 'update.bat')}"`],
+    { cwd: ROOT, detached: true, stdio: 'ignore', windowsVerbatimArguments: true }).unref();
+  setTimeout(() => process.exit(0), 600);
+  return { ok: true };
+});
 
 route('POST', '/api/password', ({ user, body }) => {
   need(String(body.password || '').length >= 6, 'Mật khẩu tối thiểu 6 ký tự');

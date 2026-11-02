@@ -20,7 +20,8 @@ Giao diện v2 (theo template "Architeq"): nền sáng ấm, menu ngang, nút đ
 | `server/seed.js` | Khởi tạo DB: 1 tài khoản quản trị + nhân viên từ `data/employees.json` |
 | `public/` | Frontend SPA (`index.html`, `css/style.css`, `js/app.js`) |
 | `data/db.json` | CSDL file JSON (tự sinh) — **không commit** |
-| `data/employees.json` | Danh sách nhân viên thật (từ Excel) — **không commit** |
+| `data/employees.json` | Danh sách nhân viên (tên + chức vụ, từ Excel) — **có commit** (repo riêng tư) để máy khác có sẵn |
+| `config.json` | Tên công ty, giờ làm việc |
 | `Employee.xlsx` | File nguồn danh sách nhân viên — **không commit** (dữ liệu cá nhân) |
 | `Document/` | Tài liệu: yêu cầu, thiết kế, hướng dẫn |
 | `Template/` | Biểu mẫu: đơn nghỉ phép, thông báo, CSV |
@@ -33,8 +34,10 @@ Giao diện v2 (theo template "Architeq"): nền sáng ấm, menu ngang, nút đ
 - Không thêm thư viện ngoài nếu chưa cần; giữ backend là một file dễ đọc.
 - Tài khoản quản trị có `staff:false` (không tính là nhân viên, không xuất hiện trong danh sách chấm công). Nhân viên có `staff:true`, không có `passwordHash`.
 - Mật khẩu băm bằng scrypt; **không** trả `passwordHash/salt` ra API (dùng `pub()`).
-- Giờ chuẩn: vào 08:30, tính muộn sau 08:45, ra 17:30 (`settings` trong DB) — chưa xác nhận với công ty.
+- Giờ làm: **09:00–18:00**, tính muộn sau 09:15 (ân hạn 15 phút — chưa xác nhận). Cấu hình trong `config.json` (sửa rồi khởi động lại server; server luôn nạp lại từ file này).
 - Ngày làm việc T2–T6. Không chấm công cho ngày tương lai hoặc cuối tuần.
-- **Dữ liệu thật của công ty không đưa lên git** (xem `.gitignore`). Repo: https://github.com/fuku-tn/cham-cong
+- **Dữ liệu chấm công (`data/db.json`) và `Employee.xlsx` không đưa lên git** (xem `.gitignore`). Mỗi máy chạy server có DB riêng, nằm ở `data/db.json`. Repo (riêng tư): https://github.com/fuku-tn/cham-cong. Nếu đổi repo sang công khai phải bỏ `data/employees.json` khỏi git.
+- Cập nhật phiên bản: server so sánh với upstream (`git fetch` + `rev-list HEAD..@{u}`) qua `/api/update/check`; UI hiện thanh cập nhật, bấm thì `/api/update/run` mở terminal chạy `update.bat` (sao lưu → `git pull --ff-only` → chạy lại server) rồi server tự thoát. Chỉ Windows, cần bản clone git có upstream. Nhớ tăng `version` trong `package.json` khi phát hành.
+- Server tự sao lưu DB mỗi ngày vào `Archive/db-backup/db-YYYY-MM-DD.json` (giữ 30 bản).
 - Trước khi sửa cấu trúc DB: chạy `npm run backup` và ghi vào `ARCHIVE.md`.
 - Sau mỗi phiên làm việc: cập nhật `MEMORY.md`.

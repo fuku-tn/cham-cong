@@ -12,6 +12,7 @@ Không cần `npm install`.
 
 ## Dữ liệu lưu ở đâu
 - Toàn bộ dữ liệu chấm công nằm trong file `data/db.json` **trên máy đang chạy** (tự tạo ở lần chạy đầu, không nằm trên GitHub).
+- Mỗi lần chấm công hoặc ghi nhận nghỉ phép, server tự ghi lại file Excel/CSV theo tháng: `data/cham-cong-YYYY-MM.csv` (ví dụ `cham-cong-2026-11.csv`). File này chỉ để xem/báo cáo — sửa trong Excel không làm đổi dữ liệu trên web. Nên **đóng file trước khi chấm công tiếp** (Excel khoá file đang mở).
 - Server tự sao lưu mỗi ngày vào `Archive/db-backup/` (giữ 30 bản).
 - Khi cập nhật phiên bản mới (tải đè code), **giữ nguyên thư mục `data/`** thì dữ liệu cũ vẫn còn.
 

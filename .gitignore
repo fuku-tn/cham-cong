@@ -3,3 +3,4 @@ node_modules/
 .claude/
 Employee.xlsx
 Archive/db-backup/*.json
+data/*.csv

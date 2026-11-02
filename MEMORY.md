@@ -18,6 +18,9 @@
 
 - Cơ chế cập nhật (2026-11-02): người dùng nhận repo từ bên khác để kéo về; web tự báo bản mới, bấm là mở terminal chạy `update.bat`. Đã thử bằng repo giả cục bộ (phát hiện bản mới + git pull OK); **chưa thử** nút bấm mở terminal trên giao diện thật.
 
+- Xuất CSV theo tháng vào `data/` (2026-11-02), tự cập nhật sau mỗi lần lưu; một chiều (db.json là nguồn gốc).
+- Sự cố 2026-11-02: khi thử tính năng CSV mình lỡ chạy API thử trên DB thật và xoá bản ghi chấm công của Trần Hữu Bảo Anh (09:00, chưa giờ ra). Đã khôi phục từ `Archive/db-backup/db-2026-11-02.json` và đối chiếu khớp. Quy ước mới: không test trên DB thật.
+
 ## Cần xác nhận với người dùng
 - Dữ liệu Excel có vài chỗ nghi sai/lạ, **đang giữ nguyên văn**: "Chuyên **vien** quản lý cơ sở vật chất" (viên?), "Nhân viên **gắng tạo**" (gia công / lắp ráp?), "**Siri**" (Tạ Thị Thiên Thanh), "An ninh web".
 - Ân hạn đi muộn (hiện 15 phút: muộn sau 09:15) và có làm thứ Bảy không.

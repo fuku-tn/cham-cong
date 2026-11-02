@@ -83,10 +83,15 @@ const PAGES = {
   attendance: { title: 'Chấm công', view: attendanceView },
   hr: { title: 'Nhân sự', view: hrView },
 };
+let lastKey = null;
 async function render() {
-  if (!ME) return loginView();
+  if (!ME) { lastKey = null; return loginView(); }
   let key = location.hash.replace('#/', '') || 'dashboard';
   if (!PAGES[key]) key = 'dashboard';
+  // Giữ nguyên vị trí cuộn khi chỉ vẽ lại cùng một trang (bấm Vào/Ra, đổi ngày, lưu…)
+  const keepY = key === lastKey ? window.scrollY : 0;
+  lastKey = key;
+  $app.style.minHeight = $app.offsetHeight + 'px'; // tránh trang co lại làm trình duyệt tự cuộn về đầu
   const nav = Object.entries(PAGES).map(([k, p]) => `<a href="#/${k}" class="${k === key ? 'active' : ''}">${p.title}</a>`).join('');
   $app.innerHTML = `<header class="topbar">${BRAND}<nav class="nav">${nav}</nav>
     <div class="userbox"><div class="who-mini"><b>${esc(ME.name)}</b><small>${esc(ME.position)}</small></div>
@@ -97,6 +102,8 @@ async function render() {
   checkUpdate();
   document.getElementById('logout').onclick = async () => { await api('POST', '/api/logout'); ME = null; render(); };
   try { await PAGES[key].view(document.getElementById('page')); } catch (e) { toast(e.message, true); }
+  $app.style.minHeight = '';
+  window.scrollTo(0, keepY);
 }
 
 // ---------- Cập nhật phiên bản ----------

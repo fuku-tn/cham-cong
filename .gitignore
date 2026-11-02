@@ -1,3 +1,6 @@
 data/db.json
 node_modules/
 .claude/
+Employee.xlsx
+data/employees.json
+Archive/db-backup/*.json

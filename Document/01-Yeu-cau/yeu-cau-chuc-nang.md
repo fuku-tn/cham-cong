@@ -1,16 +1,18 @@
-# Yêu cầu chức năng
+# Yêu cầu chức năng — Starttrain
 
 ## Vai trò
-- **Nhân viên**: đăng nhập, xem Dashboard, chấm công vào/ra, xem lịch công tháng, xin/huỷ nghỉ phép.
-- **Quản trị (HR)**: tất cả quyền trên + quản lý nhân viên, duyệt/từ chối nghỉ phép, xem bảng công tháng.
+- **Người phụ trách chấm công** (tài khoản duy nhất, role `admin`): chấm công vào/ra cho từng nhân viên, ghi nhận nghỉ phép, quản lý danh sách nhân sự, xem tổng quan và bảng công.
+- **Nhân viên** (14 người): chỉ là dữ liệu, **không đăng nhập**, không tự chấm công.
 
 ## Trang
-1. **Tổng quan** – số liệu hôm nay (có mặt/muộn/nghỉ/chưa chấm công), bảng tình trạng nhân sự (lọc theo phòng ban), thống kê phòng ban, xu hướng 7 ngày, lịch nghỉ sắp tới.
-2. **Chấm công & Nghỉ phép** – đồng hồ + nút chấm công, lịch tháng màu theo trạng thái, phép năm còn lại, danh sách đơn.
-3. **Quản lý nhân sự** (admin) – danh sách/thêm/sửa/nghỉ việc, duyệt phép, bảng công tháng.
+1. **Tổng quan** – số liệu hôm nay (có mặt/muộn/nghỉ/chưa chấm công), tỷ lệ chuyên cần, bảng tình trạng nhân viên (lọc theo trạng thái), 7 ngày gần nhất, top đi muộn trong tháng, lịch nghỉ sắp tới.
+2. **Chấm công** – 3 tab:
+   - *Theo ngày*: chọn ngày, bấm Vào/Ra cho từng người (hôm nay lấy giờ hiện tại; ngày cũ lấy giờ chuẩn và có thể "Sửa giờ"), chấm vào hàng loạt.
+   - *Nghỉ phép*: ghi nhận/xoá nghỉ phép cho nhân viên.
+   - *Bảng công tháng*: tổng hợp theo tháng, xuất CSV.
+3. **Nhân sự** – danh sách, thêm/sửa/đánh dấu nghỉ việc.
 
 ## Quy tắc nghiệp vụ
-- Ngày làm việc: T2–T6. Muộn nếu chấm vào sau 08:45.
-- Phép năm: 12 ngày/năm/người; đơn "Phép năm" không được vượt số còn lại.
-- Đơn nghỉ: trạng thái `pending → approved | rejected`; chỉ huỷ được khi `pending`.
-- Người đang nghỉ phép đã duyệt không chấm công được trong các ngày đó.
+- Ngày làm việc: T2–T6. Muộn nếu giờ vào sau 08:45 (cấu hình trong `settings`).
+- Không chấm công cho ngày tương lai, cuối tuần, hoặc ngày nhân viên đang nghỉ phép.
+- Phép năm: 12 ngày/năm/người; bản ghi "Phép năm" không được vượt số còn lại. Nghỉ phép do người phụ trách ghi nhận nên có hiệu lực ngay.

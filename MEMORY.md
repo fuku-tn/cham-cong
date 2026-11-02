@@ -1,27 +1,29 @@
 # MEMORY — Bối cảnh & quyết định dự án
 
 ## Người dùng / bối cảnh
-- Công ty ~20 nhân sự, muốn web app chấm công + nghỉ phép + quản lý nhân sự, chạy localhost để xem thử trước.
-- Ban đầu muốn chibi trên sơ đồ văn phòng; **đã bỏ (2026-11-02)** — muốn giao diện chuyên nghiệp, không chibi/hoạt hình.
-- Giao diện tham chiếu hiện tại: template "Architeq" (nền sáng ấm, menu ngang, nút đen pill, accent xanh lá, panel tối bo góc). Ảnh "teid." là mẫu v1 (đã lưu trữ).
+- Công ty **Starttrain**, 14 nhân viên (file `Employee.xlsx`: Tên + Chức vụ, không có email/phòng ban/SĐT).
+- **Chỉ một người chịu trách nhiệm chấm công** trên web; nhân viên khác không tự chấm công (quyết định 2026-11-02).
+- Ban đầu muốn chibi trên sơ đồ văn phòng; **đã bỏ** — muốn giao diện chuyên nghiệp, không chibi/hoạt hình.
+- Giao diện tham chiếu: template "Architeq" (nền sáng ấm, menu ngang, nút đen pill, accent xanh lá, panel tối bo góc).
+- Repo GitHub: https://github.com/fuku-tn/cham-cong (commit đầu 2026-11-02 là bản demo 20 người; bản Starttrain chưa commit).
 
-## Quyết định (2026-11-02)
-- Stack: **Node thuần + JSON file + vanilla JS SPA**, không phụ thuộc npm → chạy ngay, dễ sửa. Khi cần mở rộng có thể chuyển SQLite/Supabase.
-- 3 trang: Tổng quan (hero + vòng tỷ lệ chuyên cần + panel số liệu + bảng tình trạng nhân sự), Chấm công & Nghỉ phép, Quản lý nhân sự (admin).
-- UI v2 thay UI v1 (chibi). Bản cũ lưu ở `Archive/ban-cu/ui-v1-chibi/`.
-- Phép năm mặc định 12 ngày/người; chỉ tính ngày làm việc T2–T6, chưa tính ngày lễ.
+## Quyết định
+- Stack: **Node thuần + JSON file + vanilla JS SPA**, không phụ thuộc npm. Khi cần mở rộng có thể chuyển SQLite/Supabase.
+- 3 trang: Tổng quan, Chấm công (tab: theo ngày / nghỉ phép / bảng công tháng + xuất CSV), Nhân sự (CRUD).
+- Chỉ có 1 tài khoản đăng nhập (`admin@starttrain.vn`); nhân viên không có tài khoản. Bỏ luồng "nhân viên gửi đơn → duyệt": người phụ trách ghi nhận nghỉ phép trực tiếp.
+- Bỏ khái niệm phòng ban (file Excel không có). Phép năm mặc định 12 ngày/người, chỉ tính T2–T6, chưa tính ngày lễ.
+- Dữ liệu thật (`Employee.xlsx`, `data/`) bị gitignore để không lộ lên GitHub.
+- Dữ liệu demo cũ (20 người giả) đã thay hoàn toàn bằng 14 nhân viên thật.
 
-## Trạng thái
-- [x] Đăng nhập, phân quyền admin/nhân viên
-- [x] Dashboard + sơ đồ văn phòng
-- [x] Chấm công vào/ra, lịch tháng, thống kê
-- [x] Xin/huỷ nghỉ phép; admin duyệt/từ chối
-- [x] CRUD nhân viên, bảng công tháng
+## Cần xác nhận với người dùng
+- Dữ liệu Excel có vài chỗ nghi sai/lạ, **đang giữ nguyên văn**: "Chuyên **vien** quản lý cơ sở vật chất" (viên?), "Nhân viên **gắng tạo**" (gia công / lắp ráp?), "**Siri**" (Đỗ Thị Lan), "An ninh web".
+- Giờ làm thật của công ty (hiện mặc định 08:30 / muộn sau 08:45 / ra 17:30), có làm thứ Bảy không.
+- Ai là người phụ trách chấm công (tên hiển thị tài khoản hiện là "Quản trị Starttrain").
 
 ## TODO / ý tưởng tiếp
 - [ ] Ngày lễ công ty (trừ khỏi ngày làm việc)
-- [ ] Chống chấm hộ: kiểm tra IP/Wi-Fi công ty, hoặc mã QR
-- [ ] Xuất bảng công ra Excel/CSV; chọn tháng ở tab Bảng công
-- [ ] Nhập nhân viên hàng loạt từ CSV (mẫu ở `Template/Du-lieu/`)
-- [ ] Người dùng tự đổi mật khẩu trên UI (API `/api/password` đã có)
-- [ ] Thông báo (email/Zalo) khi có đơn nghỉ phép
+- [ ] Cấu hình giờ làm trong giao diện (hiện sửa trong `settings` của db.json)
+- [ ] Nhập nhân viên từ Excel ngay trên web (hiện dùng script Python)
+- [ ] Ghi chú theo ngày (làm nửa ngày, đi công tác…)
+- [ ] Sao lưu tự động hằng ngày
+- [ ] Commit/push bản Starttrain lên GitHub (chờ người dùng yêu cầu)

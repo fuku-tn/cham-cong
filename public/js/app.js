@@ -107,22 +107,45 @@ async function render() {
 }
 
 // ---------- Cập nhật phiên bản ----------
-let updInfo = null;
+let updInfo = null, updTimer = null;
+const seenKey = 'updSeen';
+const getSeen = () => { try { return sessionStorage.getItem(seenKey); } catch { return null; } };
+const setSeen = v => { try { sessionStorage.setItem(seenKey, v); } catch { /* bỏ qua */ } };
+
+// Bấm "Cập nhật ngay": server mở cửa sổ terminal chạy update.bat rồi tự tắt
+function startUpdate() {
+  run(async () => {
+    await api('POST', '/api/update/run');
+    document.querySelectorAll('.modal-bg').forEach(m => m.remove());
+    const bar = document.getElementById('updbar'); if (bar) bar.innerHTML = '';
+    const page = document.getElementById('page');
+    if (page) page.innerHTML = `<div class="card" style="text-align:center;padding:48px"><h2 style="justify-content:center">Đang cập nhật…</h2>
+      <p style="color:var(--muted);margin-top:8px">Một cửa sổ terminal vừa mở và đang chạy cập nhật — vui lòng <b>không đóng cửa sổ đó</b>.<br>
+      Khi xong, trình duyệt sẽ tự mở lại ứng dụng. Nếu không, hãy bấm <b>F5</b> sau ít phút.</p></div>`;
+  });
+}
+function updateModal() {
+  const u = updInfo;
+  modal(`<h2>Có phiên bản mới</h2>
+    <p style="color:var(--muted);margin-top:4px">Bạn đang dùng bản ${esc(u.version)}. Có ${u.behind} thay đổi mới:</p>
+    <ul style="margin:12px 0 4px 18px;line-height:1.7">${u.changes.map(c => `<li>${esc(c)}</li>`).join('')}</ul>
+    <div class="hint">Bấm <b>Cập nhật ngay</b>, một cửa sổ terminal sẽ mở ra và tự chạy cập nhật (khoảng vài chục giây). Dữ liệu chấm công được sao lưu trước và giữ nguyên.</div>
+    <div class="actions"><button class="btn ghost" data-later>Để sau</button><button class="btn green" data-now>Cập nhật ngay</button></div>`, bg => {
+    bg.querySelector('[data-later]').onclick = () => bg.remove();
+    bg.querySelector('[data-now]').onclick = startUpdate;
+  });
+}
 async function checkUpdate() {
-  try { if (!updInfo) updInfo = await api('GET', '/api/update/check'); } catch { return; }
+  try { updInfo = await api('GET', '/api/update/check'); } catch { return; }
+  if (!updTimer) updTimer = setInterval(checkUpdate, 10 * 60 * 1000); // tự kiểm tra lại mỗi 10 phút
   const bar = document.getElementById('updbar');
-  if (!bar || !updInfo?.available) return;
+  if (!bar) return;
+  if (!updInfo?.available) { bar.innerHTML = ''; return; }
   bar.innerHTML = `<div class="updbar"><div><b>Có phiên bản mới</b> (${updInfo.behind} thay đổi)
     <small>${updInfo.changes.map(esc).join(' · ')}</small></div><button class="btn green sm" id="doUpdate">Cập nhật ngay</button></div>`;
-  document.getElementById('doUpdate').onclick = () => {
-    if (!confirm('Cập nhật sẽ mở một cửa sổ terminal và khởi động lại ứng dụng (mất vài chục giây).\nDữ liệu chấm công được giữ nguyên và tự sao lưu trước.\n\nTiếp tục?')) return;
-    run(async () => {
-      await api('POST', '/api/update/run');
-      document.getElementById('page').innerHTML = `<div class="card" style="text-align:center;padding:48px"><h2 style="justify-content:center">Đang cập nhật…</h2>
-        <p style="color:var(--muted);margin-top:8px">Hãy theo dõi cửa sổ terminal vừa mở. Khi nó báo xong và trình duyệt tự mở lại, bạn có thể dùng tiếp.<br>Nếu trang này không tự tải lại, bấm <b>F5</b>.</p></div>`;
-      bar.innerHTML = '';
-    });
-  };
+  document.getElementById('doUpdate').onclick = updateModal;
+  // Hiện cửa sổ thông báo nổi một lần cho mỗi phiên bản mới (mỗi lần mở trình duyệt)
+  if (getSeen() !== updInfo.latest && !document.querySelector('.modal-bg')) { setSeen(updInfo.latest); updateModal(); }
 }
 
 // ---------- Tổng quan ----------

@@ -1,6 +1,6 @@
 {
   "name": "cham-cong-teid",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Web app chấm công, nghỉ phép, quản lý nhân sự (~20 người)",
   "scripts": { "start": "node server/server.js", "reset-data": "node scripts/reset-data.js", "backup": "node scripts/backup.js" },
   "engines": { "node": ">=18" },

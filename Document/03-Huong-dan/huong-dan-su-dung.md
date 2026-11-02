@@ -7,6 +7,6 @@
 5. **Nghỉ phép**: tab *Nghỉ phép* → *Ghi nhận nghỉ phép*, chọn nhân viên, loại, ngày. Những ngày này nhân viên tự hiển thị "Nghỉ phép".
 6. **Bảng công tháng**: tab *Bảng công tháng*, chọn tháng, *Xuất CSV* để mở bằng Excel.
 7. **Nhân sự**: thêm/sửa nhân viên, đánh dấu *Đã nghỉ việc* (dữ liệu chấm công cũ vẫn giữ).
-8. **Dữ liệu nằm ở đâu**: file `data/db.json` trên chính máy đang chạy. Server tự sao lưu mỗi ngày vào `Archive/db-backup/` (30 bản gần nhất). Nên chép thư mục `data/` và `Archive/db-backup/` ra USB/Drive định kỳ.
+8. **Dữ liệu nằm ở đâu**: file `data/db.json` trên chính máy đang chạy. Ngoài ra mỗi tháng có một file Excel/CSV `data/cham-cong-YYYY-MM.csv` tự cập nhật sau mỗi lần chấm công (chỉ để xem, đóng file Excel trước khi chấm công tiếp). Server tự sao lưu mỗi ngày vào `Archive/db-backup/` (30 bản gần nhất). Nên chép thư mục `data/` và `Archive/db-backup/` ra USB/Drive định kỳ.
 10. **Cập nhật phiên bản**: khi thấy thanh "Có phiên bản mới" ở đầu trang, bấm *Cập nhật ngay* và chờ cửa sổ terminal chạy xong (dữ liệu được sao lưu và giữ nguyên).
 9. **Giờ làm việc**: sửa `config.json` rồi chạy lại server.

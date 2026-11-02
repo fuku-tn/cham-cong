@@ -38,6 +38,8 @@ Giao diện v2 (theo template "Architeq"): nền sáng ấm, menu ngang, nút đ
 - Ngày làm việc T2–T6. Không chấm công cho ngày tương lai hoặc cuối tuần.
 - **Dữ liệu chấm công (`data/db.json`) và `Employee.xlsx` không đưa lên git** (xem `.gitignore`). Mỗi máy chạy server có DB riêng, nằm ở `data/db.json`. Repo (riêng tư): https://github.com/fuku-tn/cham-cong. Nếu đổi repo sang công khai phải bỏ `data/employees.json` khỏi git.
 - Cập nhật phiên bản: server so sánh với upstream (`git fetch` + `rev-list HEAD..@{u}`) qua `/api/update/check`; UI hiện thanh cập nhật, bấm thì `/api/update/run` mở terminal chạy `update.bat` (sao lưu → `git pull --ff-only` → chạy lại server) rồi server tự thoát. Chỉ Windows, cần bản clone git có upstream. Nhớ tăng `version` trong `package.json` khi phát hành.
+- Xuất CSV: mỗi lần `save()` server ghi lại `data/cham-cong-YYYY-MM.csv` (mỗi tháng một file, UTF-8 BOM, mở được bằng Excel; gồm chấm công + ngày nghỉ phép). Chỉ là bản xuất một chiều từ `db.json`; `data/*.csv` bị gitignore. Nếu Excel đang mở file thì ghi CSV lỗi nhưng `db.json` vẫn lưu.
+- **Không thử nghiệm trên `data/db.json` thật** (đã có dữ liệu chấm công thật của công ty). Khi cần test API, chạy trên bản sao thư mục dự án hoặc DB tạm, rồi xoá.
 - Server tự sao lưu DB mỗi ngày vào `Archive/db-backup/db-YYYY-MM-DD.json` (giữ 30 bản).
 - Trước khi sửa cấu trúc DB: chạy `npm run backup` và ghi vào `ARCHIVE.md`.
 - Sau mỗi phiên làm việc: cập nhật `MEMORY.md`.

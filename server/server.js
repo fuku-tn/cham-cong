@@ -16,12 +16,14 @@ const PUBLIC = path.join(ROOT, 'public');
 // ---------- Database (file JSON) ----------
 fs.mkdirSync(DATA_DIR, { recursive: true });
 let db;
+let exportReady = false; // chỉ xuất CSV sau khi các hàm tiện ích bên dưới đã khai báo xong
 if (fs.existsSync(DB_FILE)) db = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
 else { db = seed(); save(); console.log('Đã tạo dữ liệu khởi tạo:', DB_FILE); }
 function save() {
   // Ghi ra file tạm rồi đổi tên để không bị hỏng dữ liệu nếu máy tắt đột ngột
   fs.writeFileSync(DB_FILE + '.tmp', JSON.stringify(db, null, 2));
   fs.renameSync(DB_FILE + '.tmp', DB_FILE);
+  if (exportReady) exportCsv();
 }
 db.settings = loadConfig(); // giờ làm việc luôn theo config.json
 
@@ -66,6 +68,57 @@ function statusOf(e, date) {
 }
 class HttpError extends Error { constructor(code, msg) { super(msg); this.code = code; } }
 const need = (cond, msg = 'Dữ liệu không hợp lệ', code = 400) => { if (!cond) throw new HttpError(code, msg); };
+
+// ---------- Xuất CSV (tự cập nhật mỗi khi dữ liệu thay đổi) ----------
+// Mỗi tháng một file: data/cham-cong-YYYY-MM.csv (mở được bằng Excel). Chỉ là bản xuất ra từ db.json —
+// sửa file CSV không làm thay đổi dữ liệu trên web.
+const LEAVE_LABEL = { annual: 'Nghỉ phép năm', sick: 'Nghỉ ốm', unpaid: 'Nghỉ không lương', other: 'Nghỉ khác' };
+const csvCell = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+let csvWarned = false;
+function csvRows() {
+  const byId = Object.fromEntries(staff().map(e => [e.id, e]));
+  const rows = []; // { date, emp, status, in, out, time }
+  for (const a of db.attendance) {
+    const e = byId[a.userId]; if (!e) continue;
+    const mins = a.checkOut ? Math.max(0, minutes(a.checkOut) - minutes(a.checkIn)) : null;
+    rows.push({ date: a.date, emp: e, status: isLate(a.checkIn) ? 'Đi muộn' : 'Đúng giờ', in: a.checkIn, out: a.checkOut || '',
+      time: mins === null ? '' : `${Math.floor(mins / 60)}:${String(mins % 60).padStart(2, '0')}` });
+  }
+  for (const l of db.leaves) {
+    const e = byId[l.userId]; if (!e || l.status !== 'approved') continue;
+    for (let d = new Date(l.from + 'T00:00:00'); ymd(d) <= l.to; d.setDate(d.getDate() + 1)) {
+      if (d.getDay() === 0 || d.getDay() === 6) continue;
+      rows.push({ date: ymd(d), emp: e, status: LEAVE_LABEL[l.type] || 'Nghỉ', in: '', out: '', time: '', note: l.reason });
+    }
+  }
+  return rows.sort((a, b) => a.date.localeCompare(b.date) || a.emp.name.localeCompare(b.emp.name, 'vi'));
+}
+function exportCsv() {
+  try {
+    const head = ['Ngày', 'Họ tên', 'Chức vụ', 'Trạng thái', 'Giờ vào', 'Giờ ra', 'Thời gian làm (giờ:phút)', 'Ghi chú'];
+    const months = {};
+    for (const r of csvRows()) (months[r.date.slice(0, 7)] ||= []).push(r);
+    for (const [month, rows] of Object.entries(months)) {
+      const text = '﻿' + [head, ...rows.map(r => [r.date.split('-').reverse().join('/'), r.emp.name, r.emp.position, r.status, r.in, r.out, r.time, r.note || ''])]
+        .map(line => line.map(csvCell).join(',')).join('\r\n') + '\r\n';
+      const file = path.join(DATA_DIR, `cham-cong-${month}.csv`);
+      if (fs.existsSync(file) && fs.readFileSync(file, 'utf8') === text) continue; // không đổi thì khỏi ghi
+      fs.writeFileSync(file, text);
+    }
+    // Tháng nào không còn dữ liệu (đã xoá hết) thì bỏ file CSV cũ
+    for (const f of fs.readdirSync(DATA_DIR)) {
+      const m = /^cham-cong-(\d{4}-\d{2})\.csv$/.exec(f);
+      if (m && !months[m[1]]) fs.unlinkSync(path.join(DATA_DIR, f));
+    }
+    csvWarned = false;
+  } catch (e) {
+    // Thường do Excel đang mở file CSV. Dữ liệu chính (db.json) vẫn được lưu bình thường.
+    if (!csvWarned) console.warn('Không ghi được file CSV (đang mở bằng Excel?):', e.message);
+    csvWarned = true;
+  }
+}
+exportReady = true;
+exportCsv();
 
 // ---------- API ----------
 const routes = [];

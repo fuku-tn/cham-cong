@@ -103,7 +103,8 @@ route('GET', '/api/update/check', async ({ query }) => {
     const fetched = await git(['fetch', '--quiet']);
     const behind = Number((await git(['rev-list', '--count', 'HEAD..@{u}'])).out) || 0;
     const log = behind ? (await git(['log', '--format=%s', '-n', '5', 'HEAD..@{u}'])).out.split(/\r?\n/).map(x => x.trim()).filter(Boolean) : [];
-    data = { supported: true, version: VERSION, behind, available: behind > 0, changes: log, offline: !!fetched.err };
+    const latest = (await git(['rev-parse', '--short', '@{u}'])).out;
+    data = { supported: true, version: VERSION, behind, available: behind > 0, latest, changes: log, offline: !!fetched.err };
   }
   updateCache = { at: Date.now(), data };
   return data;

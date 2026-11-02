@@ -8,7 +8,7 @@ Web app **Chấm công – Nghỉ phép – Quản lý nhân sự** cho công ty
 Giao diện v2 (theo template "Architeq"): nền sáng ấm, menu ngang, nút đen bo tròn, điểm nhấn xanh lá, panel tối. **Không dùng chibi / hoạt hình / emoji.** Biểu tượng dùng SVG line icon (`PATHS` trong `public/js/app.js`).
 
 ## Chạy
-- `node server/server.js` hoặc `start.bat` → http://localhost:3000 (không cần `npm install`).
+- `node server/server.js` hoặc `start.bat` → http://localhost:8899 (không cần `npm install`).
 - Đăng nhập lần đầu: `admin@starttrain.vn / admin123` — **phải đổi mật khẩu** (nút "Đổi mật khẩu").
 - `npm run backup` sao lưu DB vào `Archive/db-backup/`; `npm run reset-data` sao lưu rồi xoá DB (server sẽ tạo lại từ `data/employees.json`, **mất toàn bộ dữ liệu chấm công**).
 - Cập nhật danh sách nhân viên từ Excel: `python scripts/import-employees.py` (đọc `Employee.xlsx`, cột A = Tên, B = Chức vụ → `data/employees.json`), rồi `npm run reset-data` và chạy lại server. Với DB đã có dữ liệu chấm công thật, nên thêm/sửa người qua trang **Nhân sự** thay vì reset.

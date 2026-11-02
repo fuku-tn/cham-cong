@@ -1,6 +1,6 @@
 # Hướng dẫn sử dụng (dành cho người phụ trách chấm công)
 
-1. Chạy `start.bat` (hoặc `node server/server.js`), mở http://localhost:3000.
+1. Chạy `start.bat` (hoặc `node server/server.js`), mở http://localhost:8899.
 2. Đăng nhập `admin@starttrain.vn` / `admin123`, rồi bấm **Đổi mật khẩu** ngay.
 3. **Chấm công hằng ngày**: menu *Chấm công* → tab *Theo ngày*. Bấm **Vào ngay** khi nhân viên đến, **Ra ngay** khi về. Chấm cho cả đội một lúc bằng nút *Chấm vào cho N người chưa chấm*. Nhập sai giờ: *Sửa giờ*.
 4. **Bổ sung ngày cũ**: dùng mũi tên/ô chọn ngày; ngày cũ mặc định điền giờ chuẩn, sau đó chỉnh bằng *Sửa giờ*.

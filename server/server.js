@@ -7,7 +7,7 @@ const crypto = require('crypto');
 const { execFile, spawn } = require('child_process');
 const { seed, hash, ymd, loadConfig } = require('./seed');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8899;
 const ROOT = path.join(__dirname, '..');
 const DATA_DIR = path.join(ROOT, 'data');
 const DB_FILE = path.join(DATA_DIR, 'db.json');

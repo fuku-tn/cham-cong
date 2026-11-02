@@ -28,5 +28,5 @@ if errorlevel 1 (
 echo.
 echo [3/3] Khoi dong lai may chu...
 if "%1"=="--no-start" exit /b 0
-start "" http://localhost:3000
+start "" http://localhost:8899
 node server\server.js

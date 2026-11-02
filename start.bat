@@ -1,4 +1,4 @@
 @echo off
 cd /d "%~dp0"
-start "" http://localhost:3000
+start "" http://localhost:8899
 node server/server.js

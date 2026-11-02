@@ -5,7 +5,7 @@ Web app chấm công – nghỉ phép – quản lý nhân sự. Một người 
 ## Cài đặt trên máy mới
 1. Cài [Node.js](https://nodejs.org) (bản LTS, từ 18 trở lên).
 2. Tải repo về (nút **Code → Download ZIP** trên GitHub, giải nén; hoặc `git clone`).
-3. Double-click `start.bat` (hoặc chạy `node server/server.js`) rồi mở http://localhost:3000.
+3. Double-click `start.bat` (hoặc chạy `node server/server.js`) rồi mở http://localhost:8899.
 4. Đăng nhập lần đầu `admin@starttrain.vn / admin123`, bấm **Đổi mật khẩu** ngay.
 
 Không cần `npm install`.

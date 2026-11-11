@@ -1,4 +1,4 @@
-# Yêu cầu chức năng — Starttrain
+# Yêu cầu chức năng — Trans-ers
 
 ## Vai trò
 - **Người phụ trách chấm công** (tài khoản duy nhất, role `admin`): chấm công vào/ra cho từng nhân viên, ghi nhận nghỉ phép, quản lý danh sách nhân sự, xem tổng quan và bảng công.

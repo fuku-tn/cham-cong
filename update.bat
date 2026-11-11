@@ -1,9 +1,9 @@
 @echo off
 chcp 65001 >nul
 cd /d "%~dp0"
-title Cap nhat Starttrain
+title Cap nhat Trans-ers
 echo ============================================
-echo   CAP NHAT STARTTRAIN - CHAM CONG
+echo   CAP NHAT TRANS-ERS - CHAM CONG
 echo ============================================
 echo.
 echo Dang cho may chu cu dung hoan toan...

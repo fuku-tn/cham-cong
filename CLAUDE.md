@@ -1,7 +1,7 @@
 # CLAUDE.md — Hướng dẫn cho Claude khi làm việc trong dự án này
 
 ## Dự án
-Web app **Chấm công – Nghỉ phép – Quản lý nhân sự** cho công ty **Starttrain** (14 nhân viên thật, danh sách từ `Employee.xlsx`). Chạy localhost, giao diện tiếng Việt.
+Web app **Chấm công – Nghỉ phép – Quản lý nhân sự** cho công ty **Trans-ers** (14 nhân viên thật, danh sách từ `Employee.xlsx`). Chạy localhost, giao diện tiếng Việt.
 
 **Mô hình sử dụng: chỉ MỘT người phụ trách đăng nhập và chấm công thay cho tất cả nhân viên.** Nhân viên không có tài khoản, không tự chấm công, không tự xin nghỉ.
 

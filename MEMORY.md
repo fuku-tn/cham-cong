@@ -1,11 +1,11 @@
 # MEMORY — Bối cảnh & quyết định dự án
 
 ## Người dùng / bối cảnh
-- Công ty **Starttrain**, 14 nhân viên (file `Employee.xlsx`: Tên + Chức vụ, không có email/phòng ban/SĐT).
+- Công ty **Trans-ers**, 14 nhân viên (file `Employee.xlsx`: Tên + Chức vụ, không có email/phòng ban/SĐT).
 - **Chỉ một người chịu trách nhiệm chấm công** trên web; nhân viên khác không tự chấm công (quyết định 2026-11-02).
 - Ban đầu muốn chibi trên sơ đồ văn phòng; **đã bỏ** — muốn giao diện chuyên nghiệp, không chibi/hoạt hình.
 - Giao diện tham chiếu: template "Architeq" (nền sáng ấm, menu ngang, nút đen pill, accent xanh lá, panel tối bo góc).
-- Repo GitHub: https://github.com/fuku-tn/cham-cong (repo riêng tư; bản Starttrain đã push ở commit 07d5a9c, thay đổi giờ làm 9h–18h + config.json + sao lưu tự động chờ commit).
+- Repo GitHub: https://github.com/fuku-tn/cham-cong (repo riêng tư; bản Trans-ers đã push ở commit 07d5a9c, thay đổi giờ làm 9h–18h + config.json + sao lưu tự động chờ commit).
 
 ## Quyết định
 - Stack: **Node thuần + JSON file + vanilla JS SPA**, không phụ thuộc npm. Khi cần mở rộng có thể chuyển SQLite/Supabase.
@@ -21,10 +21,12 @@
 - Xuất CSV theo tháng vào `data/` (2026-11-02), tự cập nhật sau mỗi lần lưu; một chiều (db.json là nguồn gốc).
 - Sự cố 2026-11-02: khi thử tính năng CSV mình lỡ chạy API thử trên DB thật và xoá bản ghi chấm công của một nhân viên (09:00, chưa giờ ra). Đã khôi phục từ `Archive/db-backup/db-2026-11-02.json` và đối chiếu khớp. Quy ước mới: không test trên DB thật.
 
+- 2026-11-09: người dùng yêu cầu xoá hết tên thật. Đã thay bằng tên giả lập ở DB, `employees.json`, `Employee.xlsx`, các bản sao lưu; **viết lại toàn bộ lịch sử Git** (`filter-branch`) và force push lên `main`. Hệ quả: mọi commit đổi mã; máy đã clone trước đó **không `git pull` được nữa** (update.bat báo thất bại) — phải clone lại, chép thư mục `data/` cũ sang để giữ dữ liệu. Bản dự phòng lịch sử cũ đã xoá theo yêu cầu.
+
 ## Cần xác nhận với người dùng
 - Dữ liệu Excel có vài chỗ nghi sai/lạ, **đang giữ nguyên văn**: "Chuyên **vien** quản lý cơ sở vật chất" (viên?), "Nhân viên **gắng tạo**" (gia công / lắp ráp?), "**Siri**", "An ninh web". (Từ 2026-11-09 tên nhân viên trong `data/employees.json` và DB đã được thay bằng tên giả lập theo yêu cầu người dùng.)
 - Ân hạn đi muộn (hiện 15 phút: muộn sau 09:15) và có làm thứ Bảy không.
-- Ai là người phụ trách chấm công (tên hiển thị tài khoản hiện là "Quản trị Starttrain").
+- Ai là người phụ trách chấm công (tên hiển thị tài khoản hiện là "Quản trị Trans-ers").
 
 ## TODO / ý tưởng tiếp
 - [ ] Ngày lễ công ty (trừ khỏi ngày làm việc)

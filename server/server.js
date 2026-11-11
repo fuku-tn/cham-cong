@@ -166,7 +166,7 @@ route('POST', '/api/update/run', () => {
   need(process.platform === 'win32', 'Cập nhật tự động hiện chỉ hỗ trợ Windows. Hãy chạy "git pull" thủ công.');
   need(fs.existsSync(path.join(ROOT, 'update.bat')), 'Thiếu file update.bat');
   // Mở cửa sổ terminal mới chạy update.bat (nó sẽ tự chờ server này tắt rồi pull và khởi động lại)
-  spawn('cmd.exe', ['/c', `start "Cap nhat Starttrain" /D "${ROOT}" cmd /k "${path.join(ROOT, 'update.bat')}"`],
+  spawn('cmd.exe', ['/c', `start "Cap nhat Trans-ers" /D "${ROOT}" cmd /k "${path.join(ROOT, 'update.bat')}"`],
     { cwd: ROOT, detached: true, stdio: 'ignore', windowsVerbatimArguments: true }).unref();
   setTimeout(() => process.exit(0), 600);
   return { ok: true };
@@ -349,4 +349,4 @@ http.createServer(async (req, res) => {
     if (!(e instanceof HttpError)) console.error(e);
     send(res, e.code || 500, { error: e.message || 'Lỗi máy chủ' });
   }
-}).listen(PORT, () => console.log(`\n  Starttrain Chấm công đang chạy tại http://localhost:${PORT}\n  Đăng nhập: admin@starttrain.vn / admin123  (hãy đổi mật khẩu)\n`));
+}).listen(PORT, () => console.log(`\n  Trans-ers Chấm công đang chạy tại http://localhost:${PORT}\n  Đăng nhập: admin@starttrain.vn / admin123  (hãy đổi mật khẩu)\n`));

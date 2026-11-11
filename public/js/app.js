@@ -1,7 +1,7 @@
-// Starttrain – Chấm công. SPA thuần JS. Một người phụ trách đăng nhập và chấm công thay toàn bộ nhân viên.
+// Trans-ers – Chấm công. SPA thuần JS. Một người phụ trách đăng nhập và chấm công thay toàn bộ nhân viên.
 // Điều hướng bằng hash: #/dashboard, #/attendance, #/hr
 const $app = document.getElementById('app');
-const COMPANY = 'Starttrain';
+const COMPANY = 'Trans-ers';
 let ME = null;
 const LEAVE_TYPES = { annual: 'Phép năm', sick: 'Nghỉ ốm', unpaid: 'Không lương', other: 'Khác' };
 const WORK_ST = {

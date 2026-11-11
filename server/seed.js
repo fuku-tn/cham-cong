@@ -17,7 +17,7 @@ const SAMPLE = [{ name: 'Nhân viên mẫu 1', position: 'Nhân viên' }, { name
 
 // Giờ làm việc & tên công ty: đọc từ config.json ở thư mục gốc (sửa file này rồi khởi động lại server)
 function loadConfig() {
-  const defaults = { company: 'Starttrain', workStart: '09:00', lateAfter: '09:15', workEnd: '18:00', standardHours: 8 };
+  const defaults = { company: 'Trans-ers', workStart: '09:00', lateAfter: '09:15', workEnd: '18:00', standardHours: 8 };
   try { return { ...defaults, ...JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'config.json'), 'utf8')) }; }
   catch { return defaults; }
 }
@@ -28,7 +28,7 @@ function seed() {
   const pw = hash('admin123');
   // Tài khoản duy nhất đăng nhập & chấm công (không tính là nhân viên: staff=false)
   const admin = {
-    id: 1, name: 'Quản trị Starttrain', role: 'admin', staff: false, email: 'admin@starttrain.vn',
+    id: 1, name: 'Quản trị Trans-ers', role: 'admin', staff: false, email: 'admin@starttrain.vn',
     position: 'Người phụ trách chấm công', phone: '', startDate: ymd(new Date()), color: '#1e2326',
     passwordHash: pw.hash, salt: pw.salt, active: true, annualLeave: 0,
   };

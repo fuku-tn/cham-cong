@@ -1,4 +1,4 @@
-# Starttrain — Chấm công
+# Trans-ers — Chấm công
 
 Web app chấm công – nghỉ phép – quản lý nhân sự. Một người phụ trách chấm công thay cho toàn bộ nhân viên. Chạy hoàn toàn trên máy cá nhân (localhost), không cần internet hay cơ sở dữ liệu.
 
